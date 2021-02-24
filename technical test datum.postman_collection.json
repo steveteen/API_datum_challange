@@ -1,0 +1,268 @@
+{
+	"info": {
+		"_postman_id": "9272097b-57f2-40ea-9b8b-8d4e8434ee43",
+		"name": "technical test datum",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Validate POST method",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const utils = eval(pm.environment.get('utils'));\r",
+							"\r",
+							"const testsConfig = {\r",
+							"    schema: 'json_schema_create_user',\r",
+							"    statusMessage: 'Created',\r",
+							"    statusCode: 201\r",
+							"};\r",
+							"\r",
+							"// esta função valida o status code da request, a status message e também valida todo o schema do response, campos obrigatorios e tipos...\r",
+							"utils.testsHttpResponseJsonSchema(testsConfig);\r",
+							"\r",
+							"pm.test('Validate if the fields sent to creation is equal the created information', () => {\r",
+							"    const req = JSON.parse(pm.request.body.raw);\r",
+							"        //desconstruindo o response e removendo da validação os campos id e createdAt pois não são mandados no body\r",
+							"        const {\r",
+							"            id, createdAt, ...response\r",
+							"        } = pm.response.json();\r",
+							"    pm.expect(req).to.deep.equal(response);\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"morpheus\",\r\n    \"job\": \"leader\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				},
+				"description": "Create"
+			},
+			"response": []
+		},
+		{
+			"name": "GET a single user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const utils = eval(pm.environment.get('utils'));\r",
+							"\r",
+							"const testsConfig = {\r",
+							"    schema: 'json_schema_get_single_user',\r",
+							"    statusMessage: 'ok',\r",
+							"    statusCode: 200\r",
+							"};\r",
+							"\r",
+							"// esta função valida o status code da request, a status message e também valida todo o schema do response, campos obrigatorios e tipos...\r",
+							"utils.testsHttpResponseJsonSchema(testsConfig);\r",
+							"\r",
+							"\r",
+							"pm.test('Validate property url', () => {\r",
+							"    pm.expect(pm.response.json().support.url).to.be.equal( `${pm.environment.get('baseUrl')}/#support-heading`);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/users/2",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				},
+				"description": "Get a single user"
+			},
+			"response": []
+		},
+		{
+			"name": "GET list users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const utils = eval(pm.environment.get('utils'));\r",
+							"\r",
+							"const testsConfig = {\r",
+							"    schema: 'json_schema_get_list_user',\r",
+							"    statusMessage: 'ok',\r",
+							"    statusCode: 200\r",
+							"};\r",
+							"\r",
+							"// esta função valida o status code da request, a status message e também valida todo o schema do response, campos obrigatorios e tipos...\r",
+							"utils.testsHttpResponseJsonSchema(testsConfig);\r",
+							"\r",
+							"\r",
+							"pm.test('Validate property url', () => {\r",
+							"    pm.expect(pm.response.json().support.url).to.be.equal( `${pm.environment.get('baseUrl')}/#support-heading`);\r",
+							"});\r",
+							"\r",
+							"pm.test('Validate property page, per_page, total, total_pages', () => {\r",
+							"    //coloquei os valores estaticos para fazer mais rapido devido ao curto tempo do desafio e por querer realizar todos as tarefas com excelencia\r",
+							"    //mas essa validação pode ser dinamica dependendo do campo!\r",
+							"    pm.expect(pm.response.json().page).to.be.equal(2);\r",
+							"    pm.expect(pm.response.json().per_page).to.be.equal(6);\r",
+							"    pm.expect(pm.response.json().total).to.be.equal(12);\r",
+							"    pm.expect(pm.response.json().total_pages).to.be.equal(2);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/users?page=2",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				},
+				"description": "Get a single user"
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH on user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const utils = eval(pm.environment.get('utils'));\r",
+							"\r",
+							"const testsConfig = {\r",
+							"    schema: 'json_schema_patch_user',\r",
+							"    statusMessage: 'ok',\r",
+							"    statusCode: 200\r",
+							"};\r",
+							"\r",
+							"// esta função valida o status code da request, a status message e também valida todo o schema do response, campos obrigatorios e tipos...\r",
+							"utils.testsHttpResponseJsonSchema(testsConfig);\r",
+							"\r",
+							"\r",
+							"pm.test('Validate if the fields sent to update is equal the updated information', () => {\r",
+							"    const req = JSON.parse(pm.request.body.raw);\r",
+							"        //desconstruindo o response e removendo da validação o campo createdAt pois não são mandados no body da request\r",
+							"        const {\r",
+							"            updatedAt, ...response\r",
+							"        } = pm.response.json();\r",
+							"    pm.expect(req).to.deep.equal(response);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"morpheus\",\r\n    \"job\": \"zion resident\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/users/2",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"2"
+					]
+				},
+				"description": "Get a single user"
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{Authorization}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
